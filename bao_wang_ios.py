@@ -4,6 +4,9 @@ __author__ = "makino"
 from airtest.core.api import *
 from airtest.cli.parser import cli_setup
 from common.screen_recorder import ScreenRecorder
+import os
+import shutil
+import stat
 if not cli_setup():
     auto_setup(__file__, logdir=True, devices=["ios:///http://127.0.0.1:8100",])
 
@@ -84,6 +87,44 @@ def ios_app_login():
         touch(Template(r"images/bao_wang/tpl1745756028561.png", record_pos=(0.391, -0.674), resolution=(1170, 2532)))
         keyevent("HOME")
 
+def cleanup_directories():
+    """
+    Clean up log and recordings directories after script completion
+    """
+    try:
+        # 修正路径构造逻辑，直接使用当前脚本所在目录
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        
+        # 定义需要清理的目录（调整到正确路径）
+        log_dir = os.path.join(script_dir, "log")
+        recordings_dir = os.path.join(script_dir, "recordings")
+        
+        # 新增调试信息
+        print(f"Attempting to remove log directory: {log_dir}")
+        print(f"Attempting to remove recordings directory: {recordings_dir}")
+
+        # 增加权限处理逻辑
+        def remove_readonly(func, path, _):
+            os.chmod(path, stat.S_IWRITE)
+            func(path)
+
+        if os.path.exists(log_dir):
+            shutil.rmtree(log_dir, onerror=remove_readonly)
+            print(f"Successfully removed log directory: {log_dir}")
+            if os.path.exists(log_dir):
+                print(f"WARNING: Log directory still exists: {log_dir}")
+        
+        if os.path.exists(recordings_dir):
+            shutil.rmtree(recordings_dir, onerror=remove_readonly)
+            print(f"Successfully removed recordings directory: {recordings_dir}")
+            if os.path.exists(recordings_dir):
+                print(f"WARNING: Recordings directory still exists: {recordings_dir}")
+                
+    except Exception as e:
+        print(f"Error during cleanup: {str(e)}")
+        import traceback
+        traceback.print_exc()
+
 def main():
     recorder = ScreenRecorder("baowang")  # 创建录屏对象，指定 app_type 为 "baowang"
     recorder.start_recording()  # 启动录屏
@@ -131,6 +172,9 @@ def main():
         print(f"HTML report generated successfully at {os.path.join(report_dir, 'report.html')}")
     except Exception as e:
         print(f"Failed to generate HTML report: {e}")
+    finally:
+        print("开始删除log目录")
+        cleanup_directories()
 
 if __name__ == "__main__":
     main()

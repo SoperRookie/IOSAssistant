@@ -5,6 +5,8 @@ from airtest.cli.parser import cli_setup
 from common.screen_recorder import ScreenRecorder
 import os
 from datetime import datetime
+import shutil
+import stat
 
 if not cli_setup():
     # 修改: 生成包含时间戳的报告目录，确保每次运行时目录唯一
@@ -102,6 +104,55 @@ def ios_app_login():
     assert_exists(Template(r"images/duo_le/tpl1745690538988.png", record_pos=(0.002, -0.105), resolution=(1170, 2532)), "Please fill in the test point.")
     keyevent("HOME")
 
+def cleanup_directories():
+    """
+    Clean up log and recordings directories after script completion
+    """
+    try:
+        # 修改: 修正路径构造逻辑，直接使用当前脚本所在目录
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        
+        # 定义需要清理的目录（调整到正确路径）
+        log_dir = os.path.join(script_dir, "log")
+        recordings_dir = os.path.join(script_dir, "recordings")
+        
+        # 新增调试信息
+        print(f"Attempting to remove log directory: {log_dir}")
+        print(f"Attempting to remove recordings directory: {recordings_dir}")
+
+        # 修改: 增加权限处理逻辑
+        def remove_readonly(func, path, _):
+            os.chmod(path, stat.S_IWRITE)
+            func(path)
+
+        if os.path.exists(log_dir):
+            # 修改: 处理只读文件权限问题
+            shutil.rmtree(log_dir, onerror=remove_readonly)
+            print(f"Successfully removed log directory: {log_dir}")
+            # 新增二次验证
+            if os.path.exists(log_dir):
+                print(f"WARNING: Log directory still exists: {log_dir}")
+        
+        if os.path.exists(recordings_dir):
+            shutil.rmtree(recordings_dir, onerror=remove_readonly)
+            print(f"Successfully removed recordings directory: {recordings_dir}")
+            if os.path.exists(recordings_dir):
+                print(f"WARNING: Recordings directory still exists: {recordings_dir}")
+                
+    except Exception as e:
+        print(f"Error during cleanup: {str(e)}")
+        import traceback
+        traceback.print_exc()
+
+def test_permissions():
+    try:
+        test_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "test_dir")
+        os.makedirs(test_dir, exist_ok=True)
+        shutil.rmtree(test_dir)
+        print("Permissions test passed: can create and delete directories.")
+    except Exception as e:
+        print(f"Permissions test failed: {e}")
+
 def main():
     recorder = ScreenRecorder("duole")  # 创建录屏对象，指定 app_type 为 "duole"
     recorder.start_recording()  # 启动录屏
@@ -149,6 +200,9 @@ def main():
         print(f"HTML report generated successfully at {os.path.join(report_dirs, 'report.html')}")
     except Exception as e:
         print(f"Failed to generate HTML report: {e}")
+    finally:
+        print("开始删除log目录")
+        cleanup_directories()
 
 if __name__ == "__main__":
     main()
