@@ -66,8 +66,11 @@ def ios_h5_login():
     touch(Template(r"images/duo_le/tpl1745689425477.png", record_pos=(0.345, 0.188), resolution=(1170, 2532)))
     wait(Template(r"images/duo_le/tpl1745689453017.png", record_pos=(-0.258, 0.202), resolution=(1170, 2532)))
     touch(Template(r"images/duo_le/tpl1745689484939.png", record_pos=(-0.065, -0.256), resolution=(1170, 2532)))
+    sleep(1)  # 添加等待时间
     text("taroko19")
+    sleep(1)  # 添加等待时间
     touch(Template(r"images/duo_le/tpl1745689549974.png", record_pos=(-0.077, -0.073), resolution=(1170, 2532)))
+    sleep(1)  # 添加等待时间
     text("yin666666")
     touch(Template(r"images/duo_le/tpl1745689593900.png", record_pos=(0.195, 0.217), resolution=(1170, 2532)))
     assert_exists(Template(r"images/duo_le/tpl1745689740505.png", record_pos=(0.002, 0.009), resolution=(1170, 2532)), "Please fill in the test point.")
