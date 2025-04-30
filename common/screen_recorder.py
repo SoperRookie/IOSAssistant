@@ -30,8 +30,8 @@ logger = logging.getLogger(__name__)
 
 # 视频保存目录
 RECORDINGS_DIR = {
-    "duole": "recordings/duole",
-    "baowang": "recordings/baowang"
+    "duole": os.path.join(tempfile.gettempdir(), "recordings/duole"),
+    "baowang": os.path.join(tempfile.gettempdir(), "recordings/baowang")
 }
 
 # 确保录制目录存在

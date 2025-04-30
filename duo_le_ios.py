@@ -24,38 +24,48 @@ def ios_download():
     主要负责多乐ios不掉签h5证书下载和app下载巡检
     :return:
     """
-    touch(Template(r"images/duo_le/tpl1745687473066.png", record_pos=(-0.119, 0.924), resolution=(1170, 2532)))
-    touch(Template(r"images/duo_le/tpl1745687496768.png", record_pos=(0.002, 0.816), resolution=(1170, 2532)))
-    text("https://duole.bet")
-    wait(Template(r"images/duo_le/tpl1745687561990.png", record_pos=(-0.009, 0.111), resolution=(1170, 2532)))
-    touch(Template(r"images/duo_le/tpl1745687573047.png", record_pos=(-0.004, 0.107), resolution=(1170, 2532)))
-    wait(Template(r"images/duo_le/tpl1745687590156.png", record_pos=(0.352, -0.026), resolution=(1170, 2532)))
-    touch(Template(r"images/duo_le/tpl1745687599502.png", record_pos=(0.35, -0.031), resolution=(1170, 2532)))
-    touch(Template(r"images/duo_le/tpl1745687617496.png", record_pos=(-0.011, 0.138), resolution=(1170, 2532)))
-    touch(Template(r"images/duo_le/tpl1745687627531.png", record_pos=(0.35, -0.028), resolution=(1170, 2532)))
-    touch(Template(r"images/duo_le/tpl1745687643891.png", record_pos=(-0.009, -0.036), resolution=(1170, 2532)))
-    wait(Template(r"images/duo_le/tpl1745687663864.png", record_pos=(0.009, -0.785), resolution=(1170, 2532)))
-    touch(Template(r"images/duo_le/tpl1745687692805.png", record_pos=(-0.018, -0.732), resolution=(1170, 2532)))
-    touch(Template(r"images/duo_le/tpl1745687709519.png", record_pos=(0.184, 0.119), resolution=(1170, 2532)))
-    touch(Template(r"images/duo_le/tpl1745687727729.png", record_pos=(0.403, 0.945), resolution=(1170, 2532)))
-    touch(Template(r"images/duo_le/tpl1745687740922.png", record_pos=(0.282, -0.921), resolution=(1170, 2532)))
-    keyevent("HOME")
+    try:
+        touch(Template(r"images/duo_le/tpl1745687473066.png", record_pos=(-0.119, 0.924), resolution=(1170, 2532)))
+        touch(Template(r"images/duo_le/tpl1745687496768.png", record_pos=(0.002, 0.816), resolution=(1170, 2532)))
+        text("https://duole.bet")
+        wait(Template(r"images/duo_le/tpl1745687561990.png", record_pos=(-0.009, 0.111), resolution=(1170, 2532)))
+        touch(Template(r"images/duo_le/tpl1745687573047.png", record_pos=(-0.004, 0.107), resolution=(1170, 2532)))
+        wait(Template(r"images/duo_le/tpl1745687590156.png", record_pos=(0.352, -0.026), resolution=(1170, 2532)))
+        touch(Template(r"images/duo_le/tpl1745687599502.png", record_pos=(0.35, -0.031), resolution=(1170, 2532)))
+        touch(Template(r"images/duo_le/tpl1745687617496.png", record_pos=(-0.011, 0.138), resolution=(1170, 2532)))
+        touch(Template(r"images/duo_le/tpl1745687627531.png", record_pos=(0.35, -0.028), resolution=(1170, 2532)))
+        touch(Template(r"images/duo_le/tpl1745687643891.png", record_pos=(-0.009, -0.036), resolution=(1170, 2532)))
+        wait(Template(r"images/duo_le/tpl1745687663864.png", record_pos=(0.009, -0.785), resolution=(1170, 2532)))
+        touch(Template(r"images/duo_le/tpl1745687692805.png", record_pos=(-0.018, -0.732), resolution=(1170, 2532)))
+        touch(Template(r"images/duo_le/tpl1745687709519.png", record_pos=(0.184, 0.119), resolution=(1170, 2532)))
+        touch(Template(r"images/duo_le/tpl1745687727729.png", record_pos=(0.403, 0.945), resolution=(1170, 2532)))
+        touch(Template(r"images/duo_le/tpl1745687740922.png", record_pos=(0.282, -0.921), resolution=(1170, 2532)))
+        keyevent("HOME")
+    except Exception as e:
+        # 如果有任何一步失败，打印错误信息并抛出异常
+        print(f"def ios_download: failed at step: {e}")
+        raise
 
 def ios_h5_install():
     """
     主要负责多乐ios不掉签h5的安装巡检
     :return:
     """
-    touch(Template(r"images/duo_le/tpl1745687971883.png", record_pos=(0.339, 0.921), resolution=(1170, 2532)))
-    wait(Template(r"images/duo_le/tpl1745687985575.png", record_pos=(0.003, -0.228), resolution=(1170, 2532)))
-    touch(Template(r"images/duo_le/tpl1745688003945.png", record_pos=(-0.002, -0.228), resolution=(1170, 2532)))
-    wait(Template(r"images/duo_le/tpl1745688021549.png", record_pos=(-0.004, -0.071), resolution=(1170, 2532)))
-    touch(Template(r"images/duo_le/tpl1745688030380.png", record_pos=(0.401, -0.862), resolution=(1170, 2532)))
-    touch(Template(r"images/duo_le/tpl1745688057747.png", record_pos=(0.004, 0.753), resolution=(1170, 2532)))
-    touch(Template(r"images/duo_le/tpl1745688072674.png", record_pos=(0.392, -0.867), resolution=(1170, 2532)))
-    touch(Template(r"images/duo_le/tpl1745688093277.png", record_pos=(-0.403, -0.912), resolution=(1170, 2532)))
-    touch(Template(r"images/duo_le/tpl1745688113609.png", record_pos=(-0.397, -0.915), resolution=(1170, 2532)))
-    keyevent("HOME")
+    try:
+        touch(Template(r"images/duo_le/tpl1745687971883.png", record_pos=(0.339, 0.921), resolution=(1170, 2532)))
+        wait(Template(r"images/duo_le/tpl1745687985575.png", record_pos=(0.003, -0.228), resolution=(1170, 2532)))
+        touch(Template(r"images/duo_le/tpl1745688003945.png", record_pos=(-0.002, -0.228), resolution=(1170, 2532)))
+        wait(Template(r"images/duo_le/tpl1745688021549.png", record_pos=(-0.004, -0.071), resolution=(1170, 2532)))
+        touch(Template(r"images/duo_le/tpl1745688030380.png", record_pos=(0.401, -0.862), resolution=(1170, 2532)))
+        touch(Template(r"images/duo_le/tpl1745688057747.png", record_pos=(0.004, 0.753), resolution=(1170, 2532)))
+        touch(Template(r"images/duo_le/tpl1745688072674.png", record_pos=(0.392, -0.867), resolution=(1170, 2532)))
+        touch(Template(r"images/duo_le/tpl1745688093277.png", record_pos=(-0.403, -0.912), resolution=(1170, 2532)))
+        touch(Template(r"images/duo_le/tpl1745688113609.png", record_pos=(-0.397, -0.915), resolution=(1170, 2532)))
+        keyevent("HOME")
+    except Exception as e:
+        # 如果有任何一步失败，打印错误信息并抛出异常
+        print(f"def ios_h5_install: failed at step: {e}")
+        raise
 
 def ios_h5_login():
     """
@@ -81,31 +91,41 @@ def ios_h5_uninstall():
     主要负责多乐ios不掉签h5的卸载巡检
     :return:
     """
-    touch(Template(r"images/duo_le/tpl1745690019159.png", record_pos=(0.335, 0.921), resolution=(1170, 2532)))
-    touch(Template(r"images/duo_le/tpl1745690055768.png", record_pos=(-0.005, 0.432), resolution=(1170, 2532)))
-    swipe(Template(r"images/duo_le/tpl1745690074532.png", record_pos=(-0.014, 0.826), resolution=(1170, 2532)), vector=[0.0073, -0.7316])
-    touch(Template(r"images/duo_le/tpl1745690101204.png", record_pos=(-0.185, 0.558), resolution=(1170, 2532)))
-    touch(Template(r"images/duo_le/tpl1745690122417.png", record_pos=(-0.009, -0.286), resolution=(1170, 2532)))
-    touch(Template(r"images/duo_le/tpl1745690150104.png", record_pos=(-0.013, -0.127), resolution=(1170, 2532)))
-    touch(Template(r"images/duo_le/tpl1745690163514.png", record_pos=(-0.014, 0.751), resolution=(1170, 2532)))
-    touch(Template(r"images/duo_le/tpl1745690181219.png", record_pos=(-0.395, -0.909), resolution=(1170, 2532)))
-    touch(Template(r"images/duo_le/tpl1745690198661.png", record_pos=(-0.394, -0.903), resolution=(1170, 2532)))
-    keyevent("HOME")
+    try:
+        touch(Template(r"images/duo_le/tpl1745690019159.png", record_pos=(0.335, 0.921), resolution=(1170, 2532)))
+        touch(Template(r"images/duo_le/tpl1745690055768.png", record_pos=(-0.005, 0.432), resolution=(1170, 2532)))
+        swipe(Template(r"images/duo_le/tpl1745690074532.png", record_pos=(-0.014, 0.826), resolution=(1170, 2532)), vector=[0.0073, -0.7316])
+        touch(Template(r"images/duo_le/tpl1745690101204.png", record_pos=(-0.185, 0.558), resolution=(1170, 2532)))
+        touch(Template(r"images/duo_le/tpl1745690122417.png", record_pos=(-0.009, -0.286), resolution=(1170, 2532)))
+        touch(Template(r"images/duo_le/tpl1745690150104.png", record_pos=(-0.013, -0.127), resolution=(1170, 2532)))
+        touch(Template(r"images/duo_le/tpl1745690163514.png", record_pos=(-0.014, 0.751), resolution=(1170, 2532)))
+        touch(Template(r"images/duo_le/tpl1745690181219.png", record_pos=(-0.395, -0.909), resolution=(1170, 2532)))
+        touch(Template(r"images/duo_le/tpl1745690198661.png", record_pos=(-0.394, -0.903), resolution=(1170, 2532)))
+        keyevent("HOME")
+    except Exception as e:
+        # 如果有任何一步失败，打印错误信息并抛出异常
+        print(f"def ios_h5_uninstall: failed at step: {e}")
+        raise
 
 def ios_app_login():
     """
     主要负责多乐ios的不掉签app登陆巡检
     :return:
     """
-    wait(Template(r"images/duo_le/tpl1745690406879.png", record_pos=(-0.126, 0.192), resolution=(1170, 2532)))
-    touch(Template(r"images/duo_le/tpl1745690422653.png", record_pos=(-0.122, 0.197), resolution=(1170, 2532)))
-    wait(Template(r"images/duo_le/tpl1745690440323.png", record_pos=(0.166, 0.146), resolution=(1170, 2532)))
-    touch(Template(r"images/duo_le/tpl1745690454508.png", record_pos=(0.177, 0.144), resolution=(1170, 2532)))
-    touch(Template(r"images/duo_le/tpl1745690473638.png", record_pos=(0.177, 0.142), resolution=(1170, 2532)))
-    wait(Template(r"images/duo_le/tpl1745690494955.png", record_pos=(-0.256, 0.15), resolution=(1170, 2532)))
-    touch(Template(r"images/duo_le/tpl1745690517721.png", record_pos=(0.184, 0.149), resolution=(1170, 2532)))
-    assert_exists(Template(r"images/duo_le/tpl1745690538988.png", record_pos=(0.002, -0.105), resolution=(1170, 2532)), "Please fill in the test point.")
-    keyevent("HOME")
+    try:
+        wait(Template(r"images/duo_le/tpl1745690406879.png", record_pos=(-0.126, 0.192), resolution=(1170, 2532)))
+        touch(Template(r"images/duo_le/tpl1745690422653.png", record_pos=(-0.122, 0.197), resolution=(1170, 2532)))
+        wait(Template(r"images/duo_le/tpl1745690440323.png", record_pos=(0.166, 0.146), resolution=(1170, 2532)))
+        touch(Template(r"images/duo_le/tpl1745690454508.png", record_pos=(0.177, 0.144), resolution=(1170, 2532)))
+        touch(Template(r"images/duo_le/tpl1745690473638.png", record_pos=(0.177, 0.142), resolution=(1170, 2532)))
+        wait(Template(r"images/duo_le/tpl1745690494955.png", record_pos=(-0.256, 0.15), resolution=(1170, 2532)))
+        touch(Template(r"images/duo_le/tpl1745690517721.png", record_pos=(0.184, 0.149), resolution=(1170, 2532)))
+        assert_exists(Template(r"images/duo_le/tpl1745690538988.png", record_pos=(0.002, -0.105), resolution=(1170, 2532)), "Please fill in the test point.")
+        keyevent("HOME")
+    except Exception as e:
+        # 如果有任何一步失败，打印错误信息并抛出异常
+        print(f"def ios_app_login: failed at step: {e}")
+        raise
 
 def cleanup_directories():
     """
