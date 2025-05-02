@@ -210,17 +210,13 @@ def main():
         import os
         from datetime import datetime
 
-        # 修改: 生成包含时间戳的报告目录，确保每次运行时目录唯一
-        timestamp1 = datetime.now().strftime("%Y%m%d_%H%M%S")
-        report_dirs = os.path.join(os.path.dirname(__file__), f"reports/duo_le/{timestamp1}")
-        os.makedirs(report_dirs, exist_ok=True)
-
+        # 修改: 使用之前生成的 report_dir，不再创建新的时间戳目录
         html_reports = LogToHtml(__file__,
                        export_dir=report_dir,
                        lang="zh"
                        )
         html_reports.report(output_file="report.html")  # 确保文件扩展名为 .html
-        print(f"HTML report generated successfully at {os.path.join(report_dirs, 'report.html')}")
+        print(f"HTML report generated successfully at {os.path.join(report_dir, 'report.html')}")
     except Exception as e:
         print(f"Failed to generate HTML report: {e}")
     finally:
