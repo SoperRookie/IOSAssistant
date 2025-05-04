@@ -1,10 +1,11 @@
 __author__ = "MaKino"
 
+from datetime import datetime
 from airtest.core.api import *
 from airtest.cli.parser import cli_setup
 from common.screen_recorder import ScreenRecorder
+from common.robot_message import RobotMessage
 import os
-from datetime import datetime
 import shutil
 import stat
 
@@ -16,6 +17,8 @@ if not cli_setup():
     # 修改: 设置logdir为False，避免在duo_le_ios.log中生成reports目录
     auto_setup(__file__, logdir=True, devices=["ios:///http://127.0.0.1:8100"])
 
+# 初始化机器人消息发送器
+robot = RobotMessage()
 
 # script content
 print("开始进行多乐ios不掉签巡检任务")
@@ -42,8 +45,10 @@ def ios_download():
         touch(Template(r"images/duo_le/tpl1745687740922.png", record_pos=(0.282, -0.921), resolution=(1170, 2532)))
         keyevent("HOME")
     except Exception as e:
-        # 如果有任何一步失败，打印错误信息并抛出异常
+        # 如果有任何一步失败，打印错误信息并发送通知
+        error_msg = f"下载h5和app失败\n错误信息: {str(e)}\n报告目录: {report_dir}"
         print(f"def ios_download: failed at step: {e}")
+        robot.send_message(target_name="1002973958", text=error_msg)
         raise
 
 def ios_h5_install():
@@ -63,8 +68,10 @@ def ios_h5_install():
         touch(Template(r"images/duo_le/tpl1745688113609.png", record_pos=(-0.397, -0.915), resolution=(1170, 2532)))
         keyevent("HOME")
     except Exception as e:
-        # 如果有任何一步失败，打印错误信息并抛出异常
+        # 如果有任何一步失败，打印错误信息并发送通知
+        error_msg = f"安装h5证书失败\n错误信息: {str(e)}\n报告目录: {report_dir}"
         print(f"def ios_h5_install: failed at step: {e}")
+        robot.send_message(target_name="1002973958", text=error_msg)
         raise
 
 def ios_h5_login():
@@ -72,19 +79,26 @@ def ios_h5_login():
     主要负责多乐ios不掉签h5的登陆巡检
     :return:
     """
-    wait(Template(r"images/duo_le/tpl1745689301177.png", record_pos=(0.35, 0.197), resolution=(1170, 2532)))
-    touch(Template(r"images/duo_le/tpl1745689425477.png", record_pos=(0.345, 0.188), resolution=(1170, 2532)))
-    wait(Template(r"images/duo_le/tpl1745689453017.png", record_pos=(-0.258, 0.202), resolution=(1170, 2532)))
-    touch(Template(r"images/duo_le/tpl1745689484939.png", record_pos=(-0.065, -0.256), resolution=(1170, 2532)))
-    sleep(1)  # 添加等待时间
-    text("taroko19")
-    sleep(1)  # 添加等待时间
-    touch(Template(r"images/duo_le/tpl1745689549974.png", record_pos=(-0.077, -0.073), resolution=(1170, 2532)))
-    sleep(1)  # 添加等待时间
-    text("yin666666")
-    touch(Template(r"images/duo_le/tpl1745689593900.png", record_pos=(0.195, 0.217), resolution=(1170, 2532)))
-    assert_exists(Template(r"images/duo_le/tpl1745689740505.png", record_pos=(0.002, 0.009), resolution=(1170, 2532)), "Please fill in the test point.")
-    keyevent("HOME")
+    try:
+        wait(Template(r"images/duo_le/tpl1745689301177.png", record_pos=(0.35, 0.197), resolution=(1170, 2532)))
+        touch(Template(r"images/duo_le/tpl1745689425477.png", record_pos=(0.345, 0.188), resolution=(1170, 2532)))
+        wait(Template(r"images/duo_le/tpl1745689453017.png", record_pos=(-0.258, 0.202), resolution=(1170, 2532)))
+        touch(Template(r"images/duo_le/tpl1745689484939.png", record_pos=(-0.065, -0.256), resolution=(1170, 2532)))
+        sleep(1)  # 添加等待时间
+        text("taroko19")
+        sleep(1)  # 添加等待时间
+        touch(Template(r"images/duo_le/tpl1745689549974.png", record_pos=(-0.077, -0.073), resolution=(1170, 2532)))
+        sleep(1)  # 添加等待时间
+        text("yin666666")
+        touch(Template(r"images/duo_le/tpl1745689593900.png", record_pos=(0.195, 0.217), resolution=(1170, 2532)))
+        assert_exists(Template(r"images/duo_le/tpl1745689740505.png", record_pos=(0.002, 0.009), resolution=(1170, 2532)), "Please fill in the test point.")
+        keyevent("HOME")
+    except Exception as e:
+        # 如果有任何一步失败，打印错误信息并发送通知
+        error_msg = f"登陆h5不掉签失败\n错误信息: {str(e)}\n报告目录: {report_dir}"
+        print(f"def ios_h5_login: failed at step: {e}")
+        robot.send_message(target_name="1002973958", text=error_msg)
+        raise
 
 def ios_h5_uninstall():
     """
@@ -103,7 +117,7 @@ def ios_h5_uninstall():
         touch(Template(r"images/duo_le/tpl1745690198661.png", record_pos=(-0.394, -0.903), resolution=(1170, 2532)))
         keyevent("HOME")
     except Exception as e:
-        # 如果有任何一步失败，打印错误信息并抛出异常
+        # 如果有任何一步失败，打印错误信息（不发送通知）
         print(f"def ios_h5_uninstall: failed at step: {e}")
         raise
 
@@ -123,8 +137,10 @@ def ios_app_login():
         assert_exists(Template(r"images/duo_le/tpl1745690538988.png", record_pos=(0.002, -0.105), resolution=(1170, 2532)), "Please fill in the test point.")
         keyevent("HOME")
     except Exception as e:
-        # 如果有任何一步失败，打印错误信息并抛出异常
+        # 如果有任何一步失败，打印错误信息并发送通知
+        error_msg = f"登陆app不掉签失败\n错误信息: {str(e)}\n报告目录: {report_dir}"
         print(f"def ios_app_login: failed at step: {e}")
+        robot.send_message(target_name="1002973958", text=error_msg)
         raise
 
 def cleanup_directories():
@@ -177,7 +193,14 @@ def test_permissions():
         print(f"Permissions test failed: {e}")
 
 def main():
-    recorder = ScreenRecorder("duole")  # 创建录屏对象，指定 app_type 为 "duole"
+    # 创建报告目录
+    import os
+    from datetime import datetime
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    report_dir = os.path.join(os.path.dirname(__file__), f"reports/duo_le/{timestamp}")
+    os.makedirs(report_dir, exist_ok=True)
+
+    recorder = ScreenRecorder("duole", report_dir)  # 创建录屏对象，指定 app_type 为 "duole" 和 report_dir
     recorder.start_recording()  # 启动录屏
 
     uninstall_success = False  # 新增变量，用于标记 ios_h5_uninstall 是否成功执行
@@ -210,7 +233,6 @@ def main():
         import os
         from datetime import datetime
 
-        # 修改: 使用之前生成的 report_dir，不再创建新的时间戳目录
         html_reports = LogToHtml(__file__,
                        export_dir=report_dir,
                        lang="zh"

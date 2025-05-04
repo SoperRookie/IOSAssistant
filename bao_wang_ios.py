@@ -1,15 +1,21 @@
+#!/usr/bin/env python
 # -*- encoding=utf8 -*-
-__author__ = "makino"
-
 from airtest.core.api import *
 from airtest.cli.parser import cli_setup
 from common.screen_recorder import ScreenRecorder
+from common.robot_message import RobotMessage
 import os
 import shutil
 import stat
+
+# 全局变量
+report_dir = None
+
 if not cli_setup():
     auto_setup(__file__, logdir=True, devices=["ios:///http://127.0.0.1:8100",])
 
+# 初始化机器人消息发送器
+robot = RobotMessage()
 
 # script content
 print("开始进行包网ios不掉签巡检任务")
@@ -33,8 +39,10 @@ def ios_download():
         touch(Template(r"images/bao_wang/tpl1745755131126.png", record_pos=(0.256, -0.91), resolution=(1170, 2532)))
         keyevent("HOME")
     except Exception as e:
-        # 如果有任何一步失败，打印错误信息并抛出异常
+        # 如果有任何一步失败，打印错误信息并发送通知
+        error_msg = f"下载h5和app失败\n错误信息: {str(e)}\n报告目录: {report_dir}"
         print(f"ios_download failed at step: {e}")
+        robot.send_message(target_name="1002973958", text=error_msg)
         raise
 
 def ios_h5_install():
@@ -49,8 +57,10 @@ def ios_h5_install():
         touch(Template(r"images/bao_wang/tpl1745755289964.png", record_pos=(-0.392, -0.912), resolution=(1170, 2532)))
         keyevent("HOME")
     except Exception as e:
-        # 如果有任何一步失败，打印错误信息并抛出异常
+        # 如果有任何一步失败，打印错误信息并发送通知
+        error_msg = f"安装h5证书失败\n错误信息: {str(e)}\n报告目录: {report_dir}"
         print(f"ios_h5_install failed at step: {e}")
+        robot.send_message(target_name="1002973958", text=error_msg)
         raise
 
 def ios_h5_login():
@@ -66,9 +76,11 @@ def ios_h5_login():
         wait(Template(r"images/bao_wang/tpl1745755482915.png", record_pos=(0.007, -0.602), resolution=(1170, 2532)))
         touch(Template(r"images/bao_wang/tpl1745755495874.png", record_pos=(0.388, -0.615), resolution=(1170, 2532)))
         keyevent("HOME")
-    except  Exception as e:
-        # 如果有任何一步失败，打印错误信息并抛出异常
+    except Exception as e:
+        # 如果有任何一步失败，打印错误信息并发送通知
+        error_msg = f"登陆h5不掉签失败\n错误信息: {str(e)}\n报告目录: {report_dir}"
         print(f"ios_h5_login failed at step: {e}")
+        robot.send_message(target_name="1002973958", text=error_msg)
         raise
 
 def ios_h5_uninstall():
@@ -84,7 +96,7 @@ def ios_h5_uninstall():
         touch(Template(r"images/bao_wang/tpl1745755672126.png", record_pos=(-0.385, -0.913), resolution=(1170, 2532)))
         keyevent("HOME")
     except Exception as e:
-        # 如果有任何一步失败，打印错误信息并抛出异常
+        # 如果有任何一步失败，打印错误信息（不发送通知）
         print(f"ios_h5_uninstall failed at step: {e}")
         raise
 
@@ -110,8 +122,10 @@ def ios_app_login():
             touch(Template(r"images/bao_wang/tpl1745756028561.png", record_pos=(0.391, -0.674), resolution=(1170, 2532)))
             keyevent("HOME")
     except Exception as e:
-        # 如果有任何一步失败，打印错误信息并抛出异常
+        # 如果有任何一步失败，打印错误信息并发送通知
+        error_msg = f"登陆app不掉签失败\n错误信息: {str(e)}\n报告目录: {report_dir}"
         print(f"ios_app_login failed at step: {e}")
+        robot.send_message(target_name="1002973958", text=error_msg)
         raise
 
 def cleanup_directories():
@@ -153,7 +167,15 @@ def cleanup_directories():
         traceback.print_exc()
 
 def main():
-    recorder = ScreenRecorder("baowang")  # 创建录屏对象，指定 app_type 为 "baowang"
+    global report_dir
+    import os
+    from datetime import datetime
+    # 创建报告目录
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    report_dir = os.path.join(os.path.dirname(__file__), f"reports/bao_wang/{timestamp}")
+    os.makedirs(report_dir, exist_ok=True)
+
+    recorder = ScreenRecorder("baowang", report_dir)  # 创建录屏对象，指定 app_type 为 "baowang" 和 report_dir
     recorder.start_recording()  # 启动录屏
 
     uninstall_success = False  # 新增变量，用于标记 ios_h5_uninstall 是否成功执行
@@ -185,11 +207,6 @@ def main():
         from airtest.report.report import LogToHtml
         import os
         from datetime import datetime
-
-        # 修改: 生成包含时间戳的报告目录，确保每次运行时目录唯一
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        report_dir = os.path.join(os.path.dirname(__file__), f"reports/bao_wang/{timestamp}")
-        os.makedirs(report_dir, exist_ok=True)
 
         html_reports = LogToHtml(__file__,
                        export_dir=report_dir,
