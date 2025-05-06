@@ -71,20 +71,12 @@ def run_script(script_path, app_type, report_base_dir):
         
         if result.returncode != 0:
             logger.error(f"脚本执行失败，返回代码: {result.returncode}")
-            robot.send_message(
-                target_name="1002973958",
-                text=f"脚本执行失败，返回代码: {result.returncode}，报告目录: {report_dir}"
-            )
             return False
         
         logger.info("脚本执行成功")
         return True
     except Exception as e:
         logger.error(f"执行脚本时发生错误: {e}")
-        robot.send_message(
-            target_name="1002973958",
-            text=f"执行脚本时发生错误: {e}，报告目录: {report_dir}"
-        )
         return False
     finally:
         # 移除文件处理器

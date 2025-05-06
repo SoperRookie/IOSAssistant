@@ -7,6 +7,7 @@ from common.robot_message import RobotMessage
 import os
 import shutil
 import stat
+import sys
 
 # 全局变量
 report_dir = None
@@ -42,7 +43,7 @@ def ios_download():
         # 如果有任何一步失败，打印错误信息并发送通知
         error_msg = f"下载h5和app失败\n错误信息: {str(e)}\n报告目录: {report_dir}"
         print(f"ios_download failed at step: {e}")
-        robot.send_message(target_name="1002973958", text=error_msg)
+        robot.send_message(target_name="1003033849", text=error_msg)
         raise
 
 def ios_h5_install():
@@ -60,7 +61,7 @@ def ios_h5_install():
         # 如果有任何一步失败，打印错误信息并发送通知
         error_msg = f"安装h5证书失败\n错误信息: {str(e)}\n报告目录: {report_dir}"
         print(f"ios_h5_install failed at step: {e}")
-        robot.send_message(target_name="1002973958", text=error_msg)
+        robot.send_message(target_name="1003033849", text=error_msg)
         raise
 
 def ios_h5_login():
@@ -80,7 +81,7 @@ def ios_h5_login():
         # 如果有任何一步失败，打印错误信息并发送通知
         error_msg = f"登陆h5不掉签失败\n错误信息: {str(e)}\n报告目录: {report_dir}"
         print(f"ios_h5_login failed at step: {e}")
-        robot.send_message(target_name="1002973958", text=error_msg)
+        robot.send_message(target_name="1003033849", text=error_msg)
         raise
 
 def ios_h5_uninstall():
@@ -125,7 +126,7 @@ def ios_app_login():
         # 如果有任何一步失败，打印错误信息并发送通知
         error_msg = f"登陆app不掉签失败\n错误信息: {str(e)}\n报告目录: {report_dir}"
         print(f"ios_app_login failed at step: {e}")
-        robot.send_message(target_name="1002973958", text=error_msg)
+        robot.send_message(target_name="1003033849", text=error_msg)
         raise
 
 def cleanup_directories():
@@ -179,6 +180,9 @@ def main():
     recorder.start_recording()  # 启动录屏
 
     uninstall_success = False  # 新增变量，用于标记 ios_h5_uninstall 是否成功执行
+    test_success = True  # 标记测试是否成功
+    error_message = None  # 存储错误信息
+    
     try:
         # 修改: 在执行每个方法前打印日志，便于排查问题
         print("Starting ios_download...")
@@ -194,31 +198,46 @@ def main():
         ios_app_login()
         print("All tasks completed successfully.")
     except Exception as e:
+        test_success = False
+        error_message = str(e)
         print(f"An error occurred: {e}")
         keyevent("HOME")
         if not uninstall_success:  # 如果卸载未成功，则执行卸载操作
-            print("Attempting to uninstall H5 app due to failure...")
-            ios_h5_uninstall()
+            try:
+                print("Attempting to uninstall H5 app due to failure...")
+                ios_h5_uninstall()
+            except Exception as uninstall_error:
+                print(f"Failed to uninstall H5 app: {uninstall_error}")
     finally:
         recorder.stop_recording()  # 停止录屏
 
     try:
-        # 修改: 移除 logpath 参数，确保报告只包含当前运行的 Python 文件
+        # 生成测试报告
         from airtest.report.report import LogToHtml
-        import os
-        from datetime import datetime
-
+        
+        # 在报告目录中创建一个状态文件
+        status_file = os.path.join(report_dir, "test_status.txt")
+        with open(status_file, "w", encoding="utf-8") as f:
+            f.write("测试状态: " + ("成功" if test_success else "失败") + "\n")
+            if error_message:
+                f.write(f"错误信息: {error_message}\n")
+        
         html_reports = LogToHtml(__file__,
                        export_dir=report_dir,
                        lang="zh"
                        )
-        html_reports.report(output_file="report.html")  # 确保文件扩展名为 .html
+        html_reports.report(output_file="report.html")
         print(f"HTML report generated successfully at {os.path.join(report_dir, 'report.html')}")
+        
     except Exception as e:
         print(f"Failed to generate HTML report: {e}")
     finally:
         print("开始删除log目录")
         cleanup_directories()
+        
+    # 如果测试失败，返回非零状态码
+    if not test_success:
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()
